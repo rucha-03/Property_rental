@@ -1,0 +1,42 @@
+>>SAMPLE DATA
+1) Add Users
+
+BEGIN
+    AddUser('Rucha S', 'rucha@gmail.com', '9876543210', 'pass123', 'Owner');
+    AddUser('Tejas M', 'tejas@gmail.com', '9876543120', 'pass456', 'Tenant');
+END;
+/
+ ________________________________________________________________________
+
+2) Add Property
+
+BEGIN
+    AddProperty(1, '2BHK Flat', 'Well lit and spacious', 'Pune', 15000);
+END;
+/
+ ________________________________________________________________________
+
+3) Create Booking (user books property)
+
+BEGIN
+    CreateBooking(1, 2);  -- property 1 booked by user_id 2
+END;
+/
+
+
+>Trigger will automatically set:
+
+Properties.status = 'Booked'
+
+________________________________________________________________________
+
+4) Checkout Example
+
+UPDATE Bookings
+SET checkout = SYSDATE
+WHERE booking_id = 1;
+
+
+>Trigger sets:
+
+Properties.status = 'Available'

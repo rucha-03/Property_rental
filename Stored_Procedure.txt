@@ -1,0 +1,80 @@
+1) Add Property Procedure
+
+CREATE OR REPLACE PROCEDURE AddProperty(
+     p_owner_id     IN NUMBER,
+     p_title        IN VARCHAR2,
+     p_description  IN VARCHAR2,
+     p_address      IN VARCHAR2,
+     p_rent_price   IN NUMBER
+)
+IS
+BEGIN
+    INSERT INTO Properties(owner_id, title, description, address, rent_price)
+    VALUES(p_owner_id, p_title, p_description, p_address, p_rent_price);
+END;
+/
+
+___________________________________________________________________________
+
+2) Add User Procedure
+CREATE OR REPLACE PROCEDURE AddUser(
+    p_name       IN VARCHAR2,
+    p_email      IN VARCHAR2,
+    p_phone      IN VARCHAR2,
+    p_password   IN VARCHAR2,
+    p_role       IN VARCHAR2
+)
+IS
+BEGIN
+    INSERT INTO Users(full_name, email, phone, password, role)
+    VALUES(p_name, p_email, p_phone, p_password, p_role);
+END;
+/
+
+________________________________________________________________________
+
+3) Create Booking Procedure
+
+CREATE OR REPLACE PROCEDURE CreateBooking(
+    p_property_id IN NUMBER,
+    p_user_id     IN NUMBER
+)
+IS
+BEGIN
+    INSERT INTO Bookings(property_id, user_id)
+    VALUES (p_property_id, p_user_id);
+END;
+/
+
+________________________________________________________________________
+
+4) 
+CREATE OR REPLACE PROCEDURE CreateBooking(
+p_property_id IN NUMBER,
+p_user_id IN NUMBER
+)
+IS
+BEGIN
+-- Simple guard: ensure property is Available before booking
+DECLARE
+v_status VARCHAR2(20);
+BEGIN
+SELECT status INTO v_status FROM Properties WHERE property_id = p_property_id FOR UPDATE;
+IF v_status != 'Available' THEN
+RAISE_APPLICATION_ERROR(-20001, 'Property is not available');
+END IF;
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+RAISE_APPLICATION_ERROR(-20002, 'Property not found');
+END;
+
+
+INSERT INTO Bookings(property_id, user_id) VALUES (p_property_id, p_user_id);
+COMMIT;
+EXCEPTION
+WHEN OTHERS THEN
+ROLLBACK;
+RAISE;
+END;
+/
+

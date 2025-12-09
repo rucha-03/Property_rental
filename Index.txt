@@ -1,0 +1,10 @@
+ Indexes 
+
+
+1) CREATE INDEX idx_properties_owner ON Properties(owner_id);
+________________________________________________________________________
+
+2) CREATE INDEX idx_bookings_property ON Bookings(property_id);
+________________________________________________________________________
+
+3) CREATE INDEX idx_bookings_user ON Bookings(user_id);
